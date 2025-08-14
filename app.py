@@ -45,37 +45,6 @@ memory = ConversationSummaryBufferMemory(
     return_messages=True,
 )
 
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", "You are a helpful AI talking to a human"),
-        MessagesPlaceholder(variable_name="history"),
-        ("human", "{question}"),
-    ]
-)
-chain = RunnablePassthrough.assign(history=load_memory) | prompt | llm
-
-def load_memory(_):
-    return memory.load_memory_variables({})["history"]
-
-
-def invoke_chain(question):
-    result = chain.invoke({"question": question})
-    memory.save_context(
-        {"input": question},
-        {"output": result.content},
-    )
-    print(result)
-
-
-
-
-
-
-#데코레이터를 통해서 
-#if file:
-#retriever = embed_file(file)
-#을 다시 실행하지 않음
-# 즉 새로운 파일을 업로드하지 않은 경우엔 기존 값을 다시 보여줌
 @st.cache_data(show_spinner="Embedding file...")
 def embed_file(file):
     file_content = file.read()
@@ -96,6 +65,9 @@ def embed_file(file):
     retriever = vectorstore.as_retriever()
     return retriever
 
+
+def load_memory(_):
+    return st.session_state["messages"]
 
 def save_message(message, role):
     st.session_state["messages"].append({"message": message, "role": role})
@@ -132,8 +104,6 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-
-
 st.title("DocumentGPT")
 
 st.markdown("""
@@ -148,24 +118,22 @@ with st.sidebar:
         "Upload a .txt .pdf or .docx file",
         type=["pdf", "txt", "docx"])
 
-
 if file:
     retriever = embed_file(file)
     send_message("I`m ready!! Ask away!", "ai", save=False)
     paint_history()
     message = st.chat_input("Ask anything about your file..")
-    
+        
     if message:
-        send_message(message, "human")
-        #chain 만들기
+        send_message(message, "human")        
         chain = {
             "context": retriever | RunnableLambda(format_docs),
-            "question": RunnablePassthrough()
-        } | prompt | llm
-
-        #ai가 업데이트 한것처럼 보이게 함
+            "question": RunnablePassthrough(history=load_memory)
+        } | prompt | llm        
         with st.chat_message("ai"):        
             chain.invoke(message)
       
 else:
+    #메세지들의 히스토리임 = session_state
     st.session_state["messages"] = []
+
