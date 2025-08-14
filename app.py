@@ -33,6 +33,7 @@ class ChatCallbackHandler(BaseCallbackHandler):
 llm = ChatOpenAI(
     temperature=0.1,
     streaming=True,
+    api_key="api_key",
     callbacks=[
         ChatCallbackHandler()
     ]
@@ -117,6 +118,7 @@ with st.sidebar:
     file=st.file_uploader(
         "Upload a .txt .pdf or .docx file",
         type=["pdf", "txt", "docx"])
+    api_key = st.chat_input("Input your API key..please")
 
 if file:
     retriever = embed_file(file)
