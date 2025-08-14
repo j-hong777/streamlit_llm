@@ -118,6 +118,8 @@ with st.sidebar:
     file=st.file_uploader(
         "Upload a .txt .pdf or .docx file",
         type=["pdf", "txt", "docx"])
+    
+with st.sidebar:
     api_key = st.chat_input("Input your API key..please")
 
 if file:
