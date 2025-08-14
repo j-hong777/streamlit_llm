@@ -118,9 +118,7 @@ with st.sidebar:
     file=st.file_uploader(
         "Upload a .txt .pdf or .docx file",
         type=["pdf", "txt", "docx"])
-    
-with st.sidebar:
-    api_key = st.chat_input("Input your API key..please")
+    api_key = st.chat_input("Please... Input your API key")
 
 if file:
     retriever = embed_file(file)
