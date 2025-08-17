@@ -243,3 +243,4 @@ dataclasses-json==0.5.14
 torch==2.0.1+cpu
 torchvision==0.15.2+cpu
 unstructured==0.9.0
+pip install --upgrade pip
