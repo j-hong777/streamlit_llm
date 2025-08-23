@@ -139,11 +139,11 @@ with st.sidebar:
 if not docs:
     st.markdown(
         """
-    Welcome to QuizGPT.
-                
-    I will make a quiz from Wikipedia articles or files you upload to test your knowledge and help you study.
-                
-    Get started by uploading a file or searching on Wikipedia in the sidebar.
+QuizGPT에 오신 것을 환영합니다.
+
+여러분이 업로드하신 위키백과 문서나 파일을 바탕으로 퀴즈를 만들어 지식을 테스트하고 학습에 도움을 드리겠습니다.
+
+파일을 업로드하거나 사이드바에서 위키백과를 검색하여 시작하세요.
     """
     )
 else:
